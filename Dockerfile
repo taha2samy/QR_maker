@@ -1,5 +1,5 @@
 # 1. Base Image: Use a lightweight Python version
-FROM python:3.12-slim
+FROM python:3.12-alpine
 
 # 2. Set the working directory inside the container
 WORKDIR /app
@@ -29,4 +29,4 @@ EXPOSE 8501
 # We bind to 0.0.0.0 so the container is accessible from outside
 
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD curl --fail http://localhost:8501/_stcore/health
-ENTRYPOINT ["streamlit", "run", "QR_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+ENTRYPOINT ["streamlit", "run", "src/QR_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
