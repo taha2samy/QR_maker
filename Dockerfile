@@ -1,33 +1,39 @@
-# 1. Base Image: Use a lightweight Python version
-FROM python:3.12-alpine
+# --- Stage 1: The Builder ---
+# This stage has all the tools needed to compile dependencies.
+FROM python:3.12-slim AS builder
 
-# 2. Set the working directory inside the container
-WORKDIR /app
-
-# 3. using uv to manage packages
+# 1. Install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/
 
-# 4. Copy dependencie
-COPY pyproject.toml .
-COPY uv.lock .
+WORKDIR /app
 
-# 5. increasing timout so it can install all dependencies
-ENV UV_HTTP_TIMEOUT=600
+# 2. Optimization settings
+ENV UV_COMPILE_BYTECODE=1
+ENV UV_LINK_MODE=copy
 
-# 6. Install dependencies
-RUN --mount=type=cache,target=/root/.cache/uv uv sync --locked
+# 3. Build the virtual environment
+# We only need the lock/project files to install dependencies
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --frozen --no-install-project --no-dev
 
-# 7. Copy the rest of your application code
-COPY src/ ./src
+# --- Stage 2: The Runner ---
+# This is the final image. It starts completely clean!
+FROM python:3.12-slim
 
+WORKDIR /app
+
+# 4. Copy ONLY the finished virtual environment from the builder
+COPY --from=builder /app/.venv /app/.venv
+
+# 5. Copy your application code
+COPY . .
+
+# 6. Set the environment to use the virtual environment's tools
 ENV PATH="/app/.venv/bin:$PATH"
 
-# 8. Expose the port Streamlit uses
 EXPOSE 8501
-
-# 9. The command to run the app
-# We bind to 0.0.0.0 so the container is accessible from outside
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD curl --fail http://localhost:8501/_stcore/health
 
 ENTRYPOINT ["streamlit", "run", "src/QR_app.py"]
 CMD ["--server.port=8501", "--server.address=0.0.0.0"]
