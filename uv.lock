@@ -138,6 +138,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "pillow" },
+    { name = "qrcode-artistic" },
     { name = "segno" },
     { name = "streamlit" },
 ]
@@ -145,6 +146,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "pillow", specifier = ">=12.0.0" },
+    { name = "qrcode-artistic", specifier = ">=3.0.2" },
     { name = "segno", specifier = ">=1.6.6" },
     { name = "streamlit", specifier = ">=1.51.0" },
 ]
@@ -557,6 +559,19 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/f8/bf/abbd3cdfb8fbc7fb3d4d38d320f2441b1e7cbe29be4f23797b4a2b5d8aac/pytz-2025.2.tar.gz", hash = "sha256:360b9e3dbb49a209c21ad61809c7fb453643e048b38924c765813546746e81c3", size = 320884, upload-time = "2025-03-25T02:25:00.538Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/81/c4/34e93fe5f5429d7570ec1fa436f1986fb1f00c3e0f43a589fe2bbcd22c3f/pytz-2025.2-py2.py3-none-any.whl", hash = "sha256:5ddf76296dd8c44c26eb8f4b6f35488f3ccbf6fbbd7adee0b7262d43f0ec2f00", size = 509225, upload-time = "2025-03-25T02:24:58.468Z" },
+]
+
+[[package]]
+name = "qrcode-artistic"
+version = "3.0.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pillow" },
+    { name = "segno" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4f/cf/5fff014b4ba48c7e985343bc59827e134a11bae71227c15a47bee3b999aa/qrcode-artistic-3.0.2.tar.gz", hash = "sha256:eb71f12673c89f638cf7252554a74ecbe4a22f1ce15920caa53da75a48c181f4", size = 9336, upload-time = "2023-11-27T18:31:24.824Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/10/62/81f17a375319b3d0242a3b93dd2d30ce16e5592544e1762f8c2e7514c9d2/qrcode_artistic-3.0.2-py3-none-any.whl", hash = "sha256:a2aa751a7f0220767f70842cceec206b21f9207478b9612d468273a1f46429ae", size = 7636, upload-time = "2023-11-27T18:31:22.776Z" },
 ]
 
 [[package]]
