@@ -1,4 +1,9 @@
 
+# Project Title
+
+A brief description of what this project does and who it's for
+
+
 # 🎨 Custom Photo QR Generator
 
 *A project in my "1 Year of DevOps & Software Studying" accountability journey.*
@@ -14,7 +19,6 @@ This project's aim was a mix of  interest in QR code beautification in  python a
 * **Modern Package Management:** Switched to **`uv`** by Astral. I chose this because it is significantly faster than `pip` and provides a `uv.lock` file for 100% reproducible environments and more reusable than `requirement.txt` files.
 
 * **Efficient Containerization:** I optimized my `Dockerfile` with Docker Best Practices in mind.
-
 
 
 ## 🛠️ Tech Stack
@@ -41,27 +45,58 @@ The image currently resides on Dockerhub registry.
 
 ```bash
 
-docker run -p 8501:8501 menna011/custom-qr-app:latest
+docker run --rm -d -p 8501:8501/tcp menna011/custom-qr-app:2.0
 
 ```
-2. **View the App:** Open `http://localhost:8501` in your browser.
+2. **View the App:** Open `http://127.0.0.1:8501` in your browser.
 
-## 🏗️ How I Applied Best Practices
+## ⏭️ How I Applied Best Practices
 
 
 * **Minimal Base Image:** Used `python:3.12-slim` to balance ease of use with a smaller security attack surface.
 
 * **Deterministic Builds:** By using `uv sync --locked`, I ensure that the version of Streamlit I use today is the same one used in the container even at a much later time.
 
-* **Minimal Created Image**: Not entirely satisfactory. Currently, the app image includes the `uv` binary, the `uv` cache, and potentially build-time dependencies that aren't needed at runtime. size: ~500MB; we can likely get it lower. 
+* **Minimal Created Image**: After applying a multi-build strategy for the Dockefile for building and running separately, the image size was reduced by more than half.
 
-* **Pin versions everywhere**: pinned the base image to `3.12` and, more importantly, we are using `uv sync --locked`. This pins every single sub-dependency via the `uv.lock` file.
+* **Pin versions everywhere**: pinned the base image to `3.12` and, more importantly, we are using `uv sync --locked`. This pins every single sub-dependency with help from the `uv.lock` file.
 
+* **Multi-stage Build**: Applied a multistage build (build and run stages) approach to both help with size optimization as it went from 1.37 GB to 311 MB, as well as increasing security of the image.
+
+### Best Practices Checklist
+* Essential Practices
+    * Use Dockerfile linter 🟢
+    * Check Docker language specific best practices 🟢
+    * Create a single application per Docker image 🟢
+    * Create configurable ephemeral containers 🟢
+
+* Image Practices
+    * Use optimal base image 🟢
+    * Pin versions everywhere 🟢
+    * Create image with the optimal size 🟢
+    * Use multi-stage whenever possible 🟢
+    * Avoid any unnecessary files 🟡
+
+* Security Practices
+    * Always use trusted images 🟢
+    * Never use untrusted resources 🟢
+    * Never store sensitive data in the image 🟢
+    * Use a non-root user 🟢
+    * Scan image vulnerabilities 🟢 (Trivy)
+
+* Misc Practices
+    * Leverage Docker build cache 🟢
+    * Avoid system cache 🟢
+    * Create a unified image across envs 🟡
+    * Use ENTRYPOINT with CMD 🟢
   
-## 🚀 What I Would Do Differently Next Time
-
--   **Implement a Multi-Stage Build:** Currently, the image is ~500MB because the build tools and caches stay inside the final image, which may not be a lot for a streamlit app, but too much for such a small app. I would like to try a multi-stage Dockerfile where Stage 1 builds the environment and Stage 2 only contains the final "distilled" Python environment and the app code.
-
+## 🚀 Learned lessons and what I would do differently in future Projects
 -   **Automated CI/CD Pipeline:** Instead of manual building, I would set up GitHub Actions or Jenkins. Every time I push code, the image would be automatically built, scanned for vulnerabilities, and pushed to the registry.
     
+- **Package Management Issues**: Packages using entry-point plugins (like qrcode-artistic for this project) must be explicitly declared in pyproject.toml and correctly registered in the .venv inside the image to be recognized by the main library.
+
+- **Using the Official Docker**: I Diagnosed and resolved "Permission Denied" errors caused by the Snap version of Docker's security confinement, and therefore installed the official docker, which made working with docker better.
+
 -   **Secret Management:** Right now, the app is simple, but if I added a database or API keys, I would move away from `ENV` variables in the Dockerfile and use a secure secret manager or `.dockerignore` combined with encrypted secrets.
+
+- **Deploying app to the cloud**: This time, I didn't have the time or resources to deploy the app onto the cloud, so I'd like to try doing that in the near future whether it's this app or another one.   
