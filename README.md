@@ -6,8 +6,6 @@ A brief description of what this project does and who it's for
 
 # 🎨 Custom Photo QR Generator
 
-*A project in my "1 Year of DevOps & Software Studying" accountability journey.*
-
 This is a Streamlit application that allows users to create customizable QR codes with the option of adding overlaying photos in the background and still getting an easily-recognized QR code. Most free tools online limit your ability to change shapes or add logos or at least hides it behind a paywall or a free trial; this project aims to provide that flexibility for free while maintaining high-quality output.
 
   
@@ -50,20 +48,8 @@ docker run --rm -d -p 8501:8501/tcp menna011/custom-qr-app:2.0
 ```
 2. **View the App:** Open `http://127.0.0.1:8501` in your browser.
 
-## ⏭️ How I Applied Best Practices
+## ⏭️ Applied Best Practices
 
-
-* **Minimal Base Image:** Used `python:3.12-slim` to balance ease of use with a smaller security attack surface.
-
-* **Deterministic Builds:** By using `uv sync --locked`, I ensure that the version of Streamlit I use today is the same one used in the container even at a much later time.
-
-* **Minimal Created Image**: After applying a multi-build strategy for the Dockefile for building and running separately, the image size was reduced by more than half.
-
-* **Pin versions everywhere**: pinned the base image to `3.12` and, more importantly, we are using `uv sync --locked`. This pins every single sub-dependency with help from the `uv.lock` file.
-
-* **Multi-stage Build**: Applied a multistage build (build and run stages) approach to both help with size optimization as it went from 1.37 GB to 311 MB, as well as increasing security of the image.
-
-### Best Practices Checklist
 * Essential Practices
     * Use Dockerfile linter 🟢
     * Check Docker language specific best practices 🟢
@@ -73,7 +59,7 @@ docker run --rm -d -p 8501:8501/tcp menna011/custom-qr-app:2.0
 * Image Practices
     * Use optimal base image 🟢
     * Pin versions everywhere 🟢
-    * Create image with the optimal size 🟢
+    * Create image with the optimal size 🟡
     * Use multi-stage whenever possible 🟢
     * Avoid any unnecessary files 🟡
 
