@@ -1,3 +1,4 @@
 qr_env/
 Images/
 .env
+.secrets
