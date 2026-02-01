@@ -13,6 +13,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-install-project --no-dev
 
 FROM gcr.io/distroless/python3-debian12:nonroot
+
 COPY --from=builder --chown=nonroot:nonroot /app/.venv /app/.venv
 COPY --chown=nonroot:nonroot . .
 USER nonroot
